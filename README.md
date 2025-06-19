@@ -44,10 +44,49 @@ To run the tests:
 ```shell
 task test
 ```
+## Practical application
+
+If you're like us, you might have super sekretz in some of your repos you want to use in your GCP account - in our case we want to bop our pods on some files we keep in a repo. After using this plugin, you'd be able to do something like:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: core
+  template:
+    metadata:
+      labels:
+        app: core
+    spec:
+      serviceAccountName: bucket-mounter
+      volumes:
+        - name: treasure-map
+          emptyDir: {}
+      containers:
+        - name: core
+          image: ghcr.io/theopenlane/core:latest
+          volumeMounts:
+            - name: treasure-map
+              mountPath: /app/treasuremaps
+        - name: gcsfuse
+          image: gcr.io/gcsfuse/gcsfuse:latest
+          command: ["/bin/sh", "-c", "gcsfuse --implicit-dirs treasure-map-bucket /treasuremaps && sleep infinity"]
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: treasure-map
+              mountPath: /treasuremaps
+```
+
 ## Contributing
 
 1. Fork the repo
-2. Make the changes
-3. Run the tests
-4. Commit and push your changes
-5. Send a pull request
+1. Make the changes
+1. Run the tests
+1. Commit and push your changes
+1. Send a pull request
