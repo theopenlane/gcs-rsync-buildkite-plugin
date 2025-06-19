@@ -14,6 +14,9 @@ BUCKET="$(plugin_read_config bucket)"
 SOURCE="$(plugin_read_config source templates)"
 PROJECT="$(plugin_read_config project)"
 SA_KEY="$(plugin_read_config service-account-key)"
+PROJECTNUMBER="$(plugin_read_config project-number)"
+WORKLOAD_POOL_NAME="$(plugin_read_config workload-pool-name)"
+WORKLOAD_POOL_PROVIDER="$(plugin_read_config workload-pool-provider)"
 
 if [[ -z "$BUCKET" || -z "$PROJECT" || -z "$SA_KEY" ]]; then
   echo "Missing required configuration" >&2
