@@ -1,14 +1,24 @@
----
-name: template-buildkite-plugin
-description: what your plugin does
-author: Datum
+name: gcs-rsync
+description: Sync a local directory to a Google Cloud Storage bucket using gsutil
+author: https://github.com/theopenlane
 requirements:
-  - if you have requirements
+  - bash
 configuration:
   properties:
-    propertyname:
+    bucket:
       type: string
-  required: []
-    # - if any properties are required
-  dependencies:
-    dependencyname: [dep]
+      description: The name of the GCS bucket to sync to
+    source:
+      type: string
+      description: The local directory to sync
+    project:
+      type: string
+      description: The GCP project ID
+    service-account-key:
+      type: string
+      description: The path to the service account key file
+  required:
+    - bucket
+    - project
+    - service-account-key
+  additionalProperties: false

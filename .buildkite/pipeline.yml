@@ -1,18 +1,18 @@
 steps:
   - label: ":shell: Shellcheck"
     plugins:
-      shellcheck#v1.3.0:
+      shellcheck#v1.4.0:
         files:
           - hooks/**
           - scripts/**
 
   - label: ":rocket: Test"
     plugins:
-      docker-compose#v5.3.0:
+      docker-compose#v5.10.0:
         run: tests
         cli-version: 2
 
   - label: ":sparkles: Lint"
     plugins:
       plugin-linter#v3.3.0:
-        id: a-github-user/template
+        id: theopenlane/gcs-rsync

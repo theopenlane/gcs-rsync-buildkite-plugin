@@ -1,29 +1,55 @@
 version: "3"
 
 tasks:
+  default:
+    silent: true
+    cmds:
+      - task --list
+
   install:
     desc: install packages required for working with this repo
     cmds:
       - brew install shellcheck
-  
+    deps:
+      - task: brew-installed
+
   shellcheck:
     desc: shellcheck
-    cmds: 
+    cmds:
       - shellcheck hooks/** scripts/**
+    preconditions:
+      - which shellcheck
 
   lint:
     desc: runs the buildkite compose linter
     cmds:
       - docker compose run --rm lint
+    preconditions:
+      - which docker-compose
 
   test:
     desc: runs the buildkite plugin tester
     cmds:
       - docker compose run --rm tests
+    preconditions:
+      - which docker-compose
 
-  ci: 
-    desc: runs all the commands that will be run in CI 
+  ci:
+    desc: runs all the commands that will be run in CI
     cmds:
       - task: shellcheck
       - task: lint
       - task: test
+
+  precommit-full:
+    desc: Lint the project against all files
+    cmds:
+      - pre-commit install && pre-commit install-hooks
+      - pre-commit autoupdate
+      - pre-commit run --show-diff-on-failure --color=always --all-files
+
+  brew-installed:
+    silent: true
+    desc: check if Homebrew is installed
+    cmds:
+      - '[ -x "$(command -v brew)" ] || (echo "Homebrew is not installed, please install it from https://brew.sh" && exit 1)'
