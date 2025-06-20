@@ -14,11 +14,23 @@ configuration:
     project:
       type: string
       description: The GCP project ID
-    service-account-key:
+    project-number:
       type: string
-      description: The path to the service account key file
+      description: The numeric GCP project number
+    pool-id:
+      type: string
+      description: Workload identity pool ID
+    provider-id:
+      type: string
+      description: Workload identity provider ID
+    service-account:
+      type: string
+      description: Service account email used for authentication
   required:
     - bucket
     - project
-    - service-account-key
+    - project-number
+    - pool-id
+    - provider-id
+    - service-account
   additionalProperties: false

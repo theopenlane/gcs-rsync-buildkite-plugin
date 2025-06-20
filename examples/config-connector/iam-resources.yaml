@@ -1,0 +1,33 @@
+apiVersion: iam.cnrm.cloud.google.com/v1beta1
+kind: IAMServiceAccount
+metadata:
+  name: buildkite-gcs-writer
+spec:
+  displayName: buildkite-gcs-writer
+  description: Service account for Buildkite GCS writer
+  resourceID: buildkite-gcs-writer
+---
+apiVersion: iam.cnrm.cloud.google.com/v1beta1
+kind: IAMPolicyMember
+metadata:
+  name: allow-buildkite-to-impersonate
+spec:
+  member: "principalSet://iam.googleapis.com/projects/YOUR_PROJECT_NUMBER/locations/global/workloadIdentityPools/buildkite-pool/*"
+  role: "roles/iam.workloadIdentityUser"
+  resourceRef:
+    kind: IAMServiceAccount
+    name: buildkite-gcs-writer
+---
+apiVersion: iam.cnrm.cloud.google.com/v1beta1
+kind: IAMPartialPolicy
+metadata:
+  name: buildkite-writer-gcs-access
+spec:
+  resourceRef:
+    kind: StorageBucket
+    name: YOUR_BUCKET_NAME
+    apiVersion: storage.cnrm.cloud.google.com/v1beta1
+  bindings:
+    - role: roles/storage.objectAdmin
+      members:
+        - member: "serviceAccount:buildkite-gcs-writer@YOUR_PROJECT_ID.iam.gserviceaccount.com"

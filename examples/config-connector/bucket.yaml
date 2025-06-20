@@ -1,0 +1,11 @@
+apiVersion: storage.cnrm.cloud.google.com/v1beta1
+kind: StorageBucket
+metadata:
+  name: YOUR_BUCKET_NAME
+spec:
+  location: us-central1
+  uniformBucketLevelAccess: true
+  publicAccessPrevention: enforced
+  versioning:
+    enabled: false
+  storageClass: STANDARD
