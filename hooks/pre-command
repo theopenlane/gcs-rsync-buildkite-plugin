@@ -21,6 +21,8 @@ if [[ -z "$PROJECT_NUMBER" || -z "$POOL_ID" || -z "$PROVIDER_ID" || -z "$SERVICE
   exit 1
 fi
 
+echo "$BUILDKITE_OIDC_TOKEN" > /tmp/oidc-token
+
 tmpfile="$(mktemp -p "$PWD" gcloud-wif-creds.XXXXXX)"
 CRED_FILE="${tmpfile}.json"
 mv "$tmpfile" "$CRED_FILE"
@@ -32,6 +34,9 @@ docker run --rm \
   gcloud iam workload-identity-pools create-cred-config \
     projects/"${PROJECT_NUMBER}"/locations/global/workloadIdentityPools/"${POOL_ID}"/providers/"${PROVIDER_ID}" \
     --service-account="${SERVICE_ACCOUNT}" \
-    --output-file=/workspace/'$(basename "$CRED_FILE")'
+    --output-file=/workspace/'$(basename "$CRED_FILE")' \
+    --credential-source-file=/tmp/oidc-token
 
 export GCS_RSYNC_WIF_CRED_FILE="$CRED_FILE"
+
+rm -f /tmp/oidc-token
