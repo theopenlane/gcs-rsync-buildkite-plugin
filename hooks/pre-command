@@ -5,7 +5,8 @@ set -euo pipefail
 plugin_read_config() {
   local name="$1"
   local default="${2:-}"
-  local var="BUILDKITE_PLUGIN_GCS_RSYNC_$(echo "$name" | tr '[:lower:]' '[:upper:]')"
+  local var
+  var="BUILDKITE_PLUGIN_GCS_RSYNC_$(echo "$name" | tr '[:lower:]' '[:upper:]')"
   var="${var//-/_}"
   echo "${!var:-$default}"
 }
@@ -29,8 +30,8 @@ docker run --rm \
   -w /workspace \
   gcr.io/google.com/cloudsdktool/cloud-sdk:slim \
   gcloud iam workload-identity-pools create-cred-config \
-    projects/${PROJECT_NUMBER}/locations/global/workloadIdentityPools/${POOL_ID}/providers/${PROVIDER_ID} \
-    --service-account=${SERVICE_ACCOUNT} \
-    --output-file=/workspace/$(basename "$CRED_FILE")
+    projects/"${PROJECT_NUMBER}"/locations/global/workloadIdentityPools/"${POOL_ID}"/providers/"${PROVIDER_ID}" \
+    --service-account="${SERVICE_ACCOUNT}" \
+    --output-file=/workspace/'$(basename "$CRED_FILE")'
 
 export GCS_RSYNC_WIF_CRED_FILE="$CRED_FILE"
