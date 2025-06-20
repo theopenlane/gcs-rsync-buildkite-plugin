@@ -1,0 +1,24 @@
+apiVersion: iam.cnrm.cloud.google.com/v1beta1
+kind: IAMWorkloadIdentityPool
+metadata:
+  name: buildkite-pool
+spec:
+  displayName: Buildkite Pool
+  description: Pool for Buildkite OIDC tokens
+  location: global
+---
+apiVersion: iam.cnrm.cloud.google.com/v1beta1
+kind: IAMWorkloadIdentityPoolProvider
+metadata:
+  name: buildkite-provider
+spec:
+  location: global
+  workloadIdentityPoolRef:
+    name: buildkite-pool
+  displayName: Buildkite OIDC Provider
+  description: Accept tokens from Buildkite Agent
+  attributeMapping:
+    "google.subject": "assertion.sub"
+    "attribute.repository": "assertion.repository"
+  oidc:
+    issuerUri: https://agent.buildkite.com

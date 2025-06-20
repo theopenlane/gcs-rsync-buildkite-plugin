@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Helper to read configuration variables
+plugin_read_config() {
+  local name="$1"
+  local default="${2:-}"
+  local var="BUILDKITE_PLUGIN_GCS_RSYNC_$(echo "$name" | tr '[:lower:]' '[:upper:]')"
+  var="${var//-/_}"
+  echo "${!var:-$default}"
+}
+
+PROJECT_NUMBER="$(plugin_read_config project-number)"
+POOL_ID="$(plugin_read_config pool-id)"
+PROVIDER_ID="$(plugin_read_config provider-id)"
+SERVICE_ACCOUNT="$(plugin_read_config service-account)"
+
+if [[ -z "$PROJECT_NUMBER" || -z "$POOL_ID" || -z "$PROVIDER_ID" || -z "$SERVICE_ACCOUNT" ]]; then
+  echo "Missing required configuration" >&2
+  exit 1
+fi
+
+tmpfile="$(mktemp -p "$PWD" gcloud-wif-creds.XXXXXX)"
+CRED_FILE="${tmpfile}.json"
+mv "$tmpfile" "$CRED_FILE"
+
+docker run --rm \
+  -v "$PWD":/workspace \
+  -w /workspace \
+  gcr.io/google.com/cloudsdktool/cloud-sdk:slim \
+  gcloud iam workload-identity-pools create-cred-config \
+    projects/${PROJECT_NUMBER}/locations/global/workloadIdentityPools/${POOL_ID}/providers/${PROVIDER_ID} \
+    --service-account=${SERVICE_ACCOUNT} \
+    --output-file=/workspace/$(basename "$CRED_FILE")
+
+export GCS_RSYNC_WIF_CRED_FILE="$CRED_FILE"

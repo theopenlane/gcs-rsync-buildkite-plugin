@@ -1,5 +1,6 @@
 setup() {
   export HOOK="$(dirname "$BATS_TEST_DIRNAME")/hooks/command"
+  export PRE_HOOK="$(dirname "$BATS_TEST_DIRNAME")/hooks/pre-command"
   export DOCKER_CMD="$BATS_TMPDIR/docker_cmd"
   mkdir -p "$BATS_TMPDIR/bin"
   cat <<'EOH' > "$BATS_TMPDIR/bin/docker"
