@@ -20,9 +20,6 @@ configuration:
     pool-id:
       type: string
       description: Workload identity pool ID
-    provider-id:
-      type: string
-      description: Workload identity provider ID
     service-account:
       type: string
       description: Service account email used for authentication
@@ -31,6 +28,5 @@ configuration:
     - project
     - project-number
     - pool-id
-    - provider-id
     - service-account
   additionalProperties: false

@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+echo "~~~ :buildkite: Requesting OIDC token from Buildkite"
+
 # Helper to read configuration variables
 plugin_read_config() {
   local name="$1"
@@ -13,15 +15,22 @@ plugin_read_config() {
 
 PROJECT_NUMBER="$(plugin_read_config project-number)"
 POOL_ID="$(plugin_read_config pool-id)"
-PROVIDER_ID="$(plugin_read_config provider-id)"
 SERVICE_ACCOUNT="$(plugin_read_config service-account)"
+REPO=$(echo "${BUILDKITE_REPO}" | awk -F'[:.]' '{ printf $3 }')
+AUDIENCE="//iam.googleapis.com/projects/${PROJECT_NUMBER}/locations/global/workloadIdentityPools/${POOL_ID}/providers/${REPO}"
 
-if [[ -z "$PROJECT_NUMBER" || -z "$POOL_ID" || -z "$PROVIDER_ID" || -z "$SERVICE_ACCOUNT" ]]; then
+if [[ -z "$PROJECT_NUMBER" || -z "$POOL_ID" || -z "$SERVICE_ACCOUNT" ]]; then
   echo "Missing required configuration" >&2
   exit 1
 fi
 
-echo "$BUILDKITE_OIDC_TOKEN" > /tmp/oidc-token
+if ! command -v buildkite-agent >/dev/null; then
+  echo "buildkite-agent command not found" >&2
+  exit 1
+fi
+
+OIDC_TOKEN="$(buildkite-agent oidc request-token --audience "${AUDIENCE}")"
+echo "$OIDC_TOKEN" > /tmp/oidc-token
 
 tmpfile="$(mktemp -p "$PWD" gcloud-wif-creds.XXXXXX)"
 CRED_FILE="${tmpfile}.json"
@@ -32,7 +41,7 @@ docker run --rm \
   -w /workspace \
   gcr.io/google.com/cloudsdktool/cloud-sdk:slim \
   gcloud iam workload-identity-pools create-cred-config \
-    projects/"${PROJECT_NUMBER}"/locations/global/workloadIdentityPools/"${POOL_ID}"/providers/"${PROVIDER_ID}" \
+    projects/"${PROJECT_NUMBER}"/locations/global/workloadIdentityPools/"${POOL_ID}"/providers/"${REPO}" \
     --service-account="${SERVICE_ACCOUNT}" \
     --output-file=/workspace/'$(basename "$CRED_FILE")' \
     --credential-source-file=/tmp/oidc-token

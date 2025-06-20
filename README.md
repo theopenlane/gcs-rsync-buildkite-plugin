@@ -35,13 +35,12 @@ Add the following to your `pipeline.yml`:
 steps:
   - command: ":"
     plugins:
-      - theopenlane/gcs-rsync#v1.0.1:
+      - theopenlane/gcs-rsync#v1.0.2:
           bucket: my-upload-bucket
           source: templates
           project: my-gcp-project
           project-number: "123456789"
           pool-id: "my-pool"
-          provider-id: "my-provider"
           service-account: "my-sa@my-gcp-project.iam.gserviceaccount.com"
 ```
 
@@ -52,7 +51,6 @@ steps:
 * `project` (**required**): GCP project ID.
 * `project-number` (**required**): Numeric GCP project number.
 * `pool-id` (**required**): Workload identity pool ID.
-* `provider-id` (**required**): Workload identity provider ID.
 * `service-account` (**required**): Service account email used for authentication.
 
 The pre-command hook uses the supplied OIDC token file to generate a temporary
