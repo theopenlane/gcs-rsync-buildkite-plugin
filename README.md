@@ -52,7 +52,6 @@ steps:
 * `project` (**required**): GCP project ID.
 * `project-number` (**required**): Numeric GCP project number.
 * `pool-id` (**required**): Workload identity pool ID.
-* `provider-id` (**required**): Workload identity provider ID.
 * `service-account` (**required**): Service account email used for authentication.
 
 The pre-command hook uses the supplied OIDC token file to generate a temporary

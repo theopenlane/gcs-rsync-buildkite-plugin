@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+echo "~~~ :buildkite: Requesting OIDC token from Buildkite"
+
+REPO=$(echo "${BUILDKITE_REPO}" | awk -F'[:.]' '{ printf $3 }')
+
 # Helper to read configuration variables
 plugin_read_config() {
   local name="$1"
@@ -13,7 +17,6 @@ plugin_read_config() {
 
 PROJECT_NUMBER="$(plugin_read_config project-number)"
 POOL_ID="$(plugin_read_config pool-id)"
-PROVIDER_ID="$(plugin_read_config provider-id)"
 SERVICE_ACCOUNT="$(plugin_read_config service-account)"
 
 if [[ -z "$PROJECT_NUMBER" || -z "$POOL_ID" || -z "$PROVIDER_ID" || -z "$SERVICE_ACCOUNT" ]]; then
@@ -32,7 +35,7 @@ docker run --rm \
   -w /workspace \
   gcr.io/google.com/cloudsdktool/cloud-sdk:slim \
   gcloud iam workload-identity-pools create-cred-config \
-    projects/"${PROJECT_NUMBER}"/locations/global/workloadIdentityPools/"${POOL_ID}"/providers/"${PROVIDER_ID}" \
+    projects/"${PROJECT_NUMBER}"/locations/global/workloadIdentityPools/"${POOL_ID}"/providers/"${REPO}" \
     --service-account="${SERVICE_ACCOUNT}" \
     --output-file=/workspace/'$(basename "$CRED_FILE")' \
     --credential-source-file=/tmp/oidc-token
