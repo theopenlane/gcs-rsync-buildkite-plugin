@@ -55,9 +55,10 @@ steps:
 * `provider-id` (**required**): Workload identity provider ID.
 * `service-account` (**required**): Service account email used for authentication.
 
-The pre-command hook generates a temporary credential file using
-`gcloud iam workload-identity-pools create-cred-config`. The command hook then
-authenticates with this file before executing `gsutil rsync`.
+The pre-command hook uses the supplied OIDC token file to generate a temporary
+credential file with `gcloud iam workload-identity-pools create-cred-config`.
+The command hook then authenticates with this file before running
+`gsutil rsync`.
 
 The plugin uses `gsutil -m rsync` to synchronize the source directory with the destination bucket.
 
