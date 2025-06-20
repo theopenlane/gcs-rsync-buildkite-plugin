@@ -1,4 +1,4 @@
-[![Build status](https://badge.buildkite.com/cf752698f275643f5163411a872eefef64ff44e486f386a872.svg)](https://buildkite.com/theopenlane/gcs-rsync-buildkite-plugin)
+[![Build status](https://badge.buildkite.com/e1c8545c9e2647b171a8f71f6e03ceeb4c56cc09651f38c679.svg)](https://buildkite.com/theopenlane/gcs-rsync-buildkite-plugin)
 
 # GCS rsync plugin
 
