@@ -16,9 +16,7 @@ load "test_helper.bash"
   export BUILDKITE_PLUGIN_GCS_RSYNC_PROJECT="my-project"
   export BUILDKITE_PLUGIN_GCS_RSYNC_PROJECT_NUMBER="123456789"
   export BUILDKITE_PLUGIN_GCS_RSYNC_POOL_ID="my-pool"
-  export BUILDKITE_PLUGIN_GCS_RSYNC_PROVIDER_ID="my-provider"
   export BUILDKITE_PLUGIN_GCS_RSYNC_SERVICE_ACCOUNT="sa@example.com"
-  export BUILDKITE_OIDC_TOKEN="meow"
 
   source "$PRE_HOOK"
 

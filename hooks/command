@@ -16,11 +16,10 @@ SOURCE="$(plugin_read_config source templates)"
 PROJECT="$(plugin_read_config project)"
 PROJECT_NUMBER="$(plugin_read_config project-number)"
 POOL_ID="$(plugin_read_config pool-id)"
-PROVIDER_ID="$(plugin_read_config provider-id)"
 SERVICE_ACCOUNT="$(plugin_read_config service-account)"
 CRED_FILE="${GCS_RSYNC_WIF_CRED_FILE:-}"
 
-if [[ -z "$BUCKET" || -z "$PROJECT" || -z "$PROJECT_NUMBER" || -z "$POOL_ID" || -z "$PROVIDER_ID" || -z "$SERVICE_ACCOUNT" ]]; then
+if [[ -z "$BUCKET" || -z "$PROJECT" || -z "$PROJECT_NUMBER" || -z "$POOL_ID" || -z "$SERVICE_ACCOUNT" ]]; then
   echo "Missing required configuration" >&2
   exit 1
 fi

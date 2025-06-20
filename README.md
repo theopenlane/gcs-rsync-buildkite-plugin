@@ -35,13 +35,12 @@ Add the following to your `pipeline.yml`:
 steps:
   - command: ":"
     plugins:
-      - theopenlane/gcs-rsync#v1.0.1:
+      - theopenlane/gcs-rsync#v1.0.2:
           bucket: my-upload-bucket
           source: templates
           project: my-gcp-project
           project-number: "123456789"
           pool-id: "my-pool"
-          provider-id: "my-provider"
           service-account: "my-sa@my-gcp-project.iam.gserviceaccount.com"
 ```
 
