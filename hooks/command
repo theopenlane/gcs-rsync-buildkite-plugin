@@ -18,6 +18,7 @@ PROJECT_NUMBER="$(plugin_read_config project-number)"
 POOL_ID="$(plugin_read_config pool-id)"
 SERVICE_ACCOUNT="$(plugin_read_config service-account)"
 CRED_FILE="${GCS_RSYNC_WIF_CRED_FILE:-}"
+OIDC_FILE="${GCS_RSYNC_OIDC_FILE:-}"
 
 if [[ -z "$BUCKET" || -z "$PROJECT" || -z "$PROJECT_NUMBER" || -z "$POOL_ID" || -z "$SERVICE_ACCOUNT" ]]; then
   echo "Missing required configuration" >&2
@@ -29,6 +30,11 @@ if [[ -z "$CRED_FILE" ]]; then
   exit 1
 fi
 
+if [[ -z "$OIDC_FILE" ]]; then
+  echo "Missing OIDC token file; pre-command may not have run" >&2
+  exit 1
+fi
+
 docker run --rm \
   -v "$PWD":/workspace \
   -w /workspace \
@@ -36,3 +42,4 @@ docker run --rm \
   bash -c "gcloud auth login --brief --cred-file=/workspace/$(basename "$CRED_FILE") && gcloud config set project ${PROJECT} && gsutil -m rsync -r ${SOURCE} gs://${BUCKET}/"
 
 rm -f "$CRED_FILE"
+rm -f "$OIDC_FILE"
