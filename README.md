@@ -35,7 +35,7 @@ Add the following to your `pipeline.yml`:
 steps:
   - command: ":"
     plugins:
-      - theopenlane/gcs-rsync#v1.0.2:
+      - theopenlane/gcs-rsync#v1.0.3:
           bucket: my-upload-bucket
           source: templates
           project: my-gcp-project

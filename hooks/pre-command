@@ -43,7 +43,7 @@ docker run --rm \
   gcloud iam workload-identity-pools create-cred-config \
     projects/"${PROJECT_NUMBER}"/locations/global/workloadIdentityPools/"${POOL_ID}"/providers/"${REPO}" \
     --service-account="${SERVICE_ACCOUNT}" \
-    --output-file=/workspace/'$(basename "$CRED_FILE")' \
+    --output-file="/workspace/$(basename "$CRED_FILE")" \
     --credential-source-file=/tmp/oidc-token
 
 export GCS_RSYNC_WIF_CRED_FILE="$CRED_FILE"
