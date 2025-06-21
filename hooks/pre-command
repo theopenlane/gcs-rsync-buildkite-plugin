@@ -30,7 +30,8 @@ if ! command -v buildkite-agent >/dev/null; then
 fi
 
 OIDC_TOKEN="$(buildkite-agent oidc request-token --audience "${AUDIENCE}")"
-echo "$OIDC_TOKEN" > /tmp/oidc-token
+OIDC_FILE="$(mktemp -p "$PWD" oidc-token.XXXXXX)"
+echo "$OIDC_TOKEN" > "$OIDC_FILE"
 
 tmpfile="$(mktemp -p "$PWD" gcloud-wif-creds.XXXXXX)"
 CRED_FILE="${tmpfile}.json"
@@ -44,8 +45,9 @@ docker run --rm \
     projects/"${PROJECT_NUMBER}"/locations/global/workloadIdentityPools/"${POOL_ID}"/providers/"${REPO}" \
     --service-account="${SERVICE_ACCOUNT}" \
     --output-file="/workspace/$(basename "$CRED_FILE")" \
-    --credential-source-file=/tmp/oidc-token
+    --credential-source-file="/workspace/$(basename "$OIDC_FILE")"
 
 export GCS_RSYNC_WIF_CRED_FILE="$CRED_FILE"
+export GCS_RSYNC_OIDC_FILE="$OIDC_FILE"
 
 rm -f /tmp/oidc-token
