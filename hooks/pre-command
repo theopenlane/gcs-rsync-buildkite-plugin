@@ -16,7 +16,12 @@ plugin_read_config() {
 PROJECT_NUMBER="$(plugin_read_config project-number)"
 POOL_ID="$(plugin_read_config pool-id)"
 SERVICE_ACCOUNT="$(plugin_read_config service-account)"
-REPO=$(echo "${BUILDKITE_REPO}" | awk -F'[:.]' '{ printf $3 }')
+PROVIDER_ID="$(plugin_read_config provider-id)"
+if [[ -n "$PROVIDER_ID" ]]; then
+  REPO="$PROVIDER_ID"
+else
+  REPO=$(echo "${BUILDKITE_REPO}" | awk -F'[:.]' '{ printf $3 }')
+fi
 AUDIENCE="//iam.googleapis.com/projects/${PROJECT_NUMBER}/locations/global/workloadIdentityPools/${POOL_ID}/providers/${REPO}"
 
 if [[ -z "$PROJECT_NUMBER" || -z "$POOL_ID" || -z "$SERVICE_ACCOUNT" ]]; then
@@ -49,5 +54,3 @@ docker run --rm \
 
 export GCS_RSYNC_WIF_CRED_FILE="$CRED_FILE"
 export GCS_RSYNC_OIDC_FILE="$OIDC_FILE"
-
-rm -f /tmp/oidc-token

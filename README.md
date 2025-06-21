@@ -35,12 +35,13 @@ Add the following to your `pipeline.yml`:
 steps:
   - command: ":"
     plugins:
-      - theopenlane/gcs-rsync#v1.0.4:
+      - theopenlane/gcs-rsync#v1.0.5:
           bucket: my-upload-bucket
           source: templates
           project: my-gcp-project
           project-number: "123456789"
           pool-id: "my-pool"
+          provider-id: "buildkite-oidc-provider"
           service-account: "my-sa@my-gcp-project.iam.gserviceaccount.com"
 ```
 
@@ -52,6 +53,7 @@ steps:
 * `project-number` (**required**): Numeric GCP project number.
 * `pool-id` (**required**): Workload identity pool ID.
 * `service-account` (**required**): Service account email used for authentication.
+* `provider-id`: Workload identity pool provider ID. Defaults to the repository name. Set this when your identity provider has a different name.
 
 The pre-command hook uses the supplied OIDC token file to generate a temporary
 credential file with `gcloud iam workload-identity-pools create-cred-config`.
