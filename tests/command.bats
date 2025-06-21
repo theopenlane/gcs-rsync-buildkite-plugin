@@ -17,8 +17,10 @@ load "test_helper.bash"
   export BUILDKITE_PLUGIN_GCS_RSYNC_PROJECT_NUMBER="123456789"
   export BUILDKITE_PLUGIN_GCS_RSYNC_POOL_ID="my-pool"
   export BUILDKITE_PLUGIN_GCS_RSYNC_SERVICE_ACCOUNT="sa@example.com"
+  export BUILDKITE_PLUGIN_GCS_RSYNC_PROVIDER_ID="custom-provider"
 
   source "$PRE_HOOK"
+  grep -q "providers/custom-provider" "$DOCKER_CMD"
 
   run "$HOOK" 2>&1
   echo "status: $status"

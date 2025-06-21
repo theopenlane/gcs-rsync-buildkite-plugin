@@ -23,6 +23,9 @@ configuration:
     service-account:
       type: string
       description: Service account email used for authentication
+    provider-id:
+      type: string
+      description: Workload identity pool provider ID
   required:
     - bucket
     - project
