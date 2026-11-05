@@ -2,7 +2,7 @@
 
 # GCS rsync plugin
 
-This plugin uploads files from your pipeline to a Google Cloud Storage bucket using `gsutil rsync`. It runs the Cloud SDK Docker image so you don't need `gcloud` installed on the agent. Instead of using a service account key which isn't a very secure method of credential exchange and management, this repo has been seutp to leverage GCP's [Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation) setup; you can find overviews of setting this up in GCP with external IdP's [here](https://cloud.google.com/iam/docs/workload-identity-federation-with-other-providers#file-sourced-credentials). Because Buildkite supports [OIDC](https://buildkite.com/docs/pipelines/security/oidc) we can configure our GCP WIP with Buildkite Agent as the OIDC provider; this process looks roughly like:
+This plugin uploads files from your pipeline to a Google Cloud Storage bucket using `gsutil rsync`. It runs the Cloud SDK Docker image so you don't need `gcloud` installed on the agent. Instead of using a service account key which isn't a very secure method of credential exchange and management, this repo has been setup to leverage GCP's [Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation) setup; you can find overviews of setting this up in GCP with external IdP's [here](https://cloud.google.com/iam/docs/workload-identity-federation-with-other-providers#file-sourced-credentials). Because Buildkite supports [OIDC](https://buildkite.com/docs/pipelines/security/oidc) we can configure our GCP WIP with Buildkite Agent as the OIDC provider; this process looks roughly like:
 
 ```mermaid
 flowchart TD
@@ -35,7 +35,7 @@ Add the following to your `pipeline.yml`:
 steps:
   - command: ":"
     plugins:
-      - theopenlane/gcs-rsync#v1.0.5:
+      - theopenlane/gcs-rsync#v1.0.6:
           bucket: my-upload-bucket
           source: templates
           project: my-gcp-project
